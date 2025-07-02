@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SIEM Dashboard - Fake Intrusion Monitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+          font-family: 'Segoe UI', Arial, sans-serif;
+          background: #16181d;
+          color: #eee;
+          margin: 0;
+          padding: 0;
+        }
+        .container {
+          max-width: 1200px;
+          margin: 30px auto;
+          background: #21232b;
+          border-radius: 16px;
+          box-shadow: 0 2px 16px #0008;
+          padding: 40px 28px 28px 28px;
+        }
+        h1 {
+          text-align: center;
+          color: #40c9ff;
+          margin-bottom: 40px;
+          letter-spacing: 2px;
+          text-shadow: 0 2px 12px #004d70;
+        }
+        .charts {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 36px;
+          justify-content: space-between;
+        }
+        .chart-card {
+          background: #181a20;
+          border-radius: 12px;
+          padding: 18px 12px 12px 12px;
+          box-shadow: 0 1px 4px #0005;
+          flex: 1 1 350px;
+          min-width: 320px;
+          margin-bottom: 30px;
+        }
+        canvas {
+          width: 100% !important;
+          max-width: 500px;
+          height: 260px !important;
+          margin-bottom: 12px;
+        }
+        .top-ips {
+          margin-top: 24px;
+          background: #22242b;
+          border-radius: 10px;
+          padding: 18px;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 10px;
+        }
+        th, td {
+          padding: 6px 10px;
+          text-align: left;
+        }
+        th {
+          background: #111318;
+          color: #61f3ff;
+        }
+        tr:nth-child(even) {
+          background: #232536;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>SIEM Dashboard — Fake Intrusion Monitor</h1>
+    <div class="charts">
+        <div class="chart-card">
+            <h3>Ataques por Tipo</h3>
+            <canvas id="tipoChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <h3>Ataques por Status</h3>
+            <canvas id="statusChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <h3>Ataques por Hora (hoje)</h3>
+            <canvas id="horaChart"></canvas>
+        </div>
+    </div>
+    <div class="top-ips">
+        <h3>Top IPs de Origem</h3>
+        <table id="ipsTable">
+            <thead>
+            <tr>
+                <th>IP</th>
+                <th>Quantidade de ataques</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const API = "http://localhost:8080/api/logs";
+
+    async function fetchAndChart() {
+      // Ataques por tipo
+      const tipoRes = await fetch(API + "/estatisticas/tipo");
+      const tipo = await tipoRes.json();
+      new Chart(document.getElementById('tipoChart'), {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(tipo),
+          datasets: [{
+            data: Object.values(tipo),
+            backgroundColor: ['#40c9ff','#ff4b1f','#f5a623','#1aff85','#ff6bcb','#56e0e0'],
+          }]
+        }
+      });
+
+      // Ataques por status
+      const statusRes = await fetch(API + "/estatisticas/status");
+      const status = await statusRes.json();
+      new Chart(document.getElementById('statusChart'), {
+        type: 'pie',
+        data: {
+          labels: Object.keys(status),
+          datasets: [{
+            data: Object.values(status),
+            backgroundColor: ['#ff4b1f','#56e0e0','#40c9ff'],
+          }]
+        }
+      });
+
+      // Ataques por hora
+      const horaRes = await fetch(API + "/estatisticas/hora");
+      const hora = await horaRes.json();
+      const horas = Array.from({length: 24}, (_, i) => i); // 0 a 23
+      const horaData = horas.map(h => hora[h] || 0);
+      new Chart(document.getElementById('horaChart'), {
+        type: 'bar',
+        data: {
+          labels: horas,
+          datasets: [{
+            label: 'Ataques',
+            data: horaData,
+            backgroundColor: '#40c9ff'
+          }]
+        }
+      });
+
+      // Top IPs de origem
+      const ipsRes = await fetch(API + "/estatisticas/top-origem?limite=8");
+      const ips = await ipsRes.json();
+      const tbody = document.querySelector('#ipsTable tbody');
+      tbody.innerHTML = '';
+      Object.entries(ips).forEach(([ip, qtd]) => {
+        tbody.innerHTML += `<tr><td>${ip}</td><td>${qtd}</td></tr>`;
+      });
+    }
+
+    fetchAndChart();
+</script>
+</body>
+</html>
