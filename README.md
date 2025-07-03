@@ -1,22 +1,59 @@
 # SIEM Dashboard — Fake Intrusion Monitor
 
-Monitor de ataques simulado, inspirado em ferramentas reais de SIEM, feito com Java Spring Boot + H2 + HTML/JS + Chart.js.
+A modern SIEM-inspired dashboard for monitoring simulated cyber attacks.  
+Built with Java Spring Boot, H2 Database, HTML/JS, and Chart.js.
 
-## 🔥 O que esse projeto faz?
+---
 
-- Gera logs fake de tentativas de intrusão (brute force, SQLi, XSS, DDOS etc)
-- Exibe gráficos e relatórios interativos em um dashboard moderno
-- Simula monitoramento “behind the firewall”, ideal para estudos de segurança
+## 🔥 What This Project Does
 
-## 💻 Tecnologias usadas
+- Generates fake logs for simulated intrusion attempts (brute force, SQLi, XSS, DDoS, etc.)
+- Displays interactive charts and detailed reports on a modern web dashboard
+- Simulates "behind the firewall" monitoring — ideal for security study and awareness
+
+---
+
+## 💻 Tech Stack
 
 - **Back-end:** Java 17, Spring Boot, Spring Data JPA, H2 Database
 - **Front-end:** HTML5, JavaScript, Chart.js
-- **Outros:** Lombok (opcional)
+- **Other:** Lombok (optional)
 
-## 🛠️ Como rodar
+---
 
-1. Clone o repositório:
-   ```sh
-   git clone https://github.com/SEUUSUARIO/NOMEDOREPO.git
+## 🛠️ How to Run
+
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/YOURUSERNAME/YOURREPO.git
+    cd YOURREPO
+    ```
+
+2. **Start the backend:**
+    ```bash
+    ./mvnw spring-boot:run
+    # or
+    mvn spring-boot:run
+    ```
+
+3. **Open the dashboard:**  
+   Open `index.html` in your browser and monitor the simulated attacks.
+
+---
+
+## ⚠️ DISCLAIMER
+
+**Educational use only!**  
+This project simulates attacks and logging for training, demonstration, and portfolio purposes.  
+Do not use in real environments.
+
+---
+
+## 📄 License
+
+MIT License — free for educational and personal use.
+
+---
+
+> Practice security monitoring. Understand threats. Visualize attacks safely.
 
